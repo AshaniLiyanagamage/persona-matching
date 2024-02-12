@@ -3,6 +3,9 @@ import tensorflow_hub as hub
 import tensorflow_text as text
 from sklearn.metrics.pairwise import cosine_similarity
 
+
+__version__ = "0.1.0"
+
 preprocess_url='https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/3'
 model_url='https://tfhub.dev/google/electra_base/2'
 bert_preprocess_model=hub.KerasLayer(preprocess_url)
