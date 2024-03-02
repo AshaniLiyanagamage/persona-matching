@@ -1,26 +1,35 @@
-import tensorflow as tf
-import tensorflow_hub as hub
-import tensorflow_text as text
+from transformers import ElectraTokenizer, ElectraModel
+import torch
+import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 
 __version__ = "0.1.0"
 
-preprocess_url='https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/3'
-model_url='https://tfhub.dev/google/electra_base/2'
-bert_preprocess_model=hub.KerasLayer(preprocess_url)
-bert_encode_model = hub.KerasLayer(model_url)
+ # Load pre-trained Electra tokenizer and model
+tokenizer = ElectraTokenizer.from_pretrained('google/electra-base-discriminator')
+model = ElectraModel.from_pretrained('google/electra-base-discriminator')
 
 def get_sentence_embeddings(sentences):
-  text_preprocessed = bert_preprocess_model(sentences)
-  return bert_encode_model(text_preprocessed)['pooled_output']
+    results=[]
+    for sentence in sentences:
+        inputs = tokenizer(sentence, return_tensors="pt")
+        outputs = model(**inputs)
+        last_hidden_states = outputs[0]
+        sentence_embedding = torch.mean(last_hidden_states, dim=1)
+        results.append(sentence_embedding)
+    return results
 
 def get_similarity(vectors):
-  count=vectors.get_shape()[0]
-  results=[]
-  for i in range (1,count):
-    results.append(cosine_similarity([vectors[0]],[vectors[i]])[0][0])
-  return results
+    results = []
+    # Convert PyTorch tensors to NumPy arrays and detach gradients if needed
+    vectors_array = [tensor.detach().numpy() if tensor.requires_grad else tensor.numpy() for tensor in vectors]
+    for i in range(1, len(vectors_array)):
+        # Reshape the arrays to 2D with one row
+        vector1 = vectors_array[0].reshape(1, -1)
+        vector2 = vectors_array[i].reshape(1, -1)
+        results.append(cosine_similarity(vector1, vector2)[0][0])
+    return results
 
 
 def algorithm(companyPersona,candidateArray,w_technical_skills,w_education,w_soft_skills,w_experience):

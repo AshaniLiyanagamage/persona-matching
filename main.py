@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from app.model.model import algorithm
-from app.model.model import __version__ as model_version
+
+from model.model import algorithm
+from model.model import __version__ as model_version
 from typing import List
 import numpy as np
 
@@ -18,7 +19,7 @@ class TextIn(BaseModel):
 
 
 class PredictionOut(BaseModel):
-    prediction: List[dict]
+    prediction: List[float]
 
 
 @app.get("/")
