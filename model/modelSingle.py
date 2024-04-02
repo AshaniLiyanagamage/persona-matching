@@ -1,13 +1,7 @@
-
 import numpy as np
 from .core import get_sentence_embeddings,get_similarity
 
-__version__ = "0.1.0"
-
- # Load pre-trained Electra tokenizer and model
-
-
-def algorithm(companyPersona,candidateArray,w_technical_skills,w_education,w_soft_skills,w_experience):
+def algorithm(companyPersona,candidatePersona,w_technical_skills,w_education,w_soft_skills,w_experience):
     educationVector=[]
     technicalSkillsVector=[]
     softSkillsVector=[]
@@ -17,11 +11,11 @@ def algorithm(companyPersona,candidateArray,w_technical_skills,w_education,w_sof
     softSkillsVector.append(companyPersona['soft_skills'])
     experienceVector.append(companyPersona['experience'])
 
-    for i in range(0,len(candidateArray)): 
-        educationVector.append(candidateArray[i]['education'])
-        technicalSkillsVector.append(candidateArray[i]['technical_skills'])
-        softSkillsVector.append(candidateArray[i]['soft_skills'])
-        experienceVector.append(candidateArray[i]['experience'])
+    
+    educationVector.append(candidatePersona['education'])
+    technicalSkillsVector.append(candidatePersona['technical_skills'])
+    softSkillsVector.append(candidatePersona['soft_skills'])
+    experienceVector.append(candidatePersona['experience'])
     
     education=get_sentence_embeddings(educationVector)
     technicalSkills=get_sentence_embeddings(technicalSkillsVector)
@@ -33,10 +27,8 @@ def algorithm(companyPersona,candidateArray,w_technical_skills,w_education,w_sof
     softSkillSet= get_similarity(softSkills)
     minimumExperienceSet = get_similarity(experience)
 
-    results=[]
-    for i in range(0,len(candidateArray)):
-        key="candidate_"+str(i+1)
-        value=(w_technical_skills*technicalSkillSet[i]+w_education*educationSet[i]+w_soft_skills*softSkillSet[i]+w_experience*minimumExperienceSet[i])*100
-        results.append({key: value})
+
+    value=(w_technical_skills*technicalSkillSet[0]+w_education*educationSet[0]+w_soft_skills*softSkillSet[0]+w_experience*minimumExperienceSet[0])*100
+    results={"response": value}
 
     return results
