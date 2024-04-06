@@ -29,6 +29,12 @@ def algorithm(companyPersona,candidatePersona,w_technical_skills,w_education,w_s
 
 
     value=(w_technical_skills*technicalSkillSet[0]+w_education*educationSet[0]+w_soft_skills*softSkillSet[0]+w_experience*minimumExperienceSet[0])*100
-    results={"response": value}
+    results={
+        "overall_score": value,
+        "education":educationSet[0]*1,
+        "soft_skills":softSkillSet[0]*1,
+        "technical_skills":technicalSkillSet[0]*1,
+        "experience":minimumExperienceSet[0]*1
+    }
 
     return results
