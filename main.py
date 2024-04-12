@@ -37,6 +37,7 @@ class PredictionOutSingle(BaseModel):
 class ExplainIn(BaseModel):
     company_persona: dict
     candidate_persona: dict
+    category:str
 
 class ExplainOut(BaseModel):
     prediction: dict
@@ -62,5 +63,5 @@ def predict(payload: TextInSingle):
 
 @app.post("/explain", response_model=ExplainOut)
 def predict(payload: ExplainIn):
-    prediction = explaination(payload.company_persona,payload.candidate_persona)
+    prediction = explaination(payload.company_persona,payload.candidate_persona,payload.category)
     return {"prediction": prediction}

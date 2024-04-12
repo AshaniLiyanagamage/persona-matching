@@ -35,19 +35,20 @@ def algorithm(companyPersona,candidateArray,w_technical_skills,w_education,w_sof
 
     results=[]
     for i in range(0,len(candidateArray)):
-        key="overall_candidate_"+str(i+1)
-        educationKey="education_"+key
-        technicalKey="technical_skills_"+key
-        softSkillsKey="soft_skills_"+key
-        experienceKey="experience_"+key
-        educationValue=educationSet[i]*1 
-        technicalValue=technicalSkillSet[i]*1 
-        softSkillsValue=softSkillSet[i]*1
-        experienceValue=minimumExperienceSet[i]*1# type: ignore
+        key="candidate_"+str(i+1)
+        educationKey="education"
+        technicalKey="technical_skills"
+        softSkillsKey="soft_skills"
+        experienceKey="experience"
+        educationValue=educationSet[i]*100 
+        technicalValue=technicalSkillSet[i]*100 
+        softSkillsValue=softSkillSet[i]*100
+        experienceValue=minimumExperienceSet[i]*100# type: ignore
         
         value=(w_technical_skills*technicalSkillSet[i]+w_education*educationSet[i]+w_soft_skills*softSkillSet[i]+w_experience*minimumExperienceSet[i])*100
         results.append({
-            key: value,
+            "key":key,
+            "value":value,
             educationKey:educationValue,
             technicalKey:technicalValue,
             softSkillsKey:softSkillsValue,
